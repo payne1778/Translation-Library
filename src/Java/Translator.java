@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Translator {
-    private static String pythonScriptPath = "translator.py";
+    private static String pythonScriptPath = "src/translator.py";
     private static String pythonInterpreter = "python";
     private static String prefferedLanguage = "english"; 
 
@@ -40,7 +40,7 @@ public class Translator {
             command.add(arg.toString());
         }
 
-        // System.out.println(command.toString());
+        System.out.println(command.toString());
 
         String line = "";
         try {
@@ -54,8 +54,9 @@ public class Translator {
 
             // Store translated output string into line variable
             while ((line = inputReader.readLine()) != null) {
-                if (line.contains("TRANSLATION")){
-                    line = line.replace("TRANSLATION: ", "").trim();
+                if (line.contains("TRANSLATION") || line.contains("OUTPUT")){
+                    line = line.replace("TRANSLATION: ", "")
+                               .replace("OUTPUT: ", "").trim();
                     break;
                 }
             }
