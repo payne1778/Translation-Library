@@ -78,6 +78,9 @@ def print_message_handler(prefered_path, default_path, message, section, message
 def get_available_languages(toml_path) -> list:
     return [language for language in get_toml_dict(toml_path).values()]
 
+def get_available_languages_anglicized(toml_path) -> list:
+    return [language for language in get_toml_dict(toml_path)]
+
 
 def is_available_language(toml_path, language) -> bool:
     toml_dict = get_toml_dict(toml_path)
@@ -133,27 +136,16 @@ def main():
             f"prefered_language_path = \'{prefered_language_path}\', " + 
             ("PASSED\n" if paths_tested[3] else "FAILED\n")
         )
-
-    print(
-        f"current_dir = \'{current_dir}\', " + 
-        ("PASSED\n" if paths_tested[0] else "FAILED\n") + 
-        f"language_list_path = \'{language_list_path}\', " + 
-        ("PASSED\n" if paths_tested[1] else "FAILED\n") + 
-        f"default_language_path = \'{default_language_path}\', " + 
-        ("PASSED\n" if paths_tested[2] else "FAILED\n") + 
-        f"prefered_language_path = \'{prefered_language_path}\', " + 
-        ("PASSED\n" if paths_tested[3] else "FAILED\n")
-    )
-
+        
     # Ensure that a language and desired message to query for were given 
-    if not language or not message:
+    if (not language or not message) and translation_mode:
         raise ValueError(
             "FATAL: Language and/or message argument(s) were not given. " +
             f"Language=\"{language}\", Message=\"{message}\"."
         )
     
     # Ensure that the desired language is supported 
-    if not is_available_language(language_list_path, language):
+    if (not is_available_language(language_list_path, language)) and translation_mode:
         raise NotImplementedError(
             f"FATAL: Language not supported: {language}" +
             "Corroborate your spelling with the relevant TOML file/entry."
@@ -168,7 +160,7 @@ def main():
             )
         case s if s in list_languages_commands: 
             print(
-                "OUTPUT: " + language for language in get_available_languages(language_list_path)
+                "OUTPUT: " + str(get_available_languages(language_list_path))
             )
         case "help":
             print("figure it out >:(")
