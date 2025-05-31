@@ -1,6 +1,7 @@
 import sys
 import os
 import tomllib
+from pathlib import Path
 
 def get_toml_dict(toml_path) -> dict: 
     with open(toml_path, "rb") as f:
@@ -78,6 +79,7 @@ def print_message_handler(prefered_path, default_path, message, section, message
 def get_available_languages(toml_path) -> list:
     return [language for language in get_toml_dict(toml_path).values()]
 
+
 def get_available_languages_anglicized(toml_path) -> list:
     return [language for language in get_toml_dict(toml_path)]
 
@@ -109,11 +111,11 @@ def main():
         language, message, section, message_args = populate_translation_vars(args)
 
     # Create paths for various TOML files and the current directory 
-    current_dir = os.getcwd().replace('\\', '/').replace('"', '')
-    language_list_path = f"{current_dir}/lib/languages.toml" 
-    default_language_path = f"{current_dir}/lib/english.toml"
+    base_directory = Path(__file__).resolve().parents[1]
+    language_list_path = os.path.join(base_directory, "lib", "languages.toml")
+    default_language_path = os.path.join(base_directory, "lib", "english.toml")
     prefered_language_path = (
-        f"{current_dir}/lib/{language}.toml" 
+        os.path.join(base_directory, "lib", f"{language}.toml")
         if translation_mode else default_language_path
     )
 
@@ -122,12 +124,12 @@ def main():
     # Check to make sure that all nessecary paths exist
     # This mainly ensures that everything is located where is should be
     paths_tested, valid_paths = are_valid_paths(
-        current_dir, language_list_path, default_language_path, prefered_language_path
+        base_directory, language_list_path, default_language_path, prefered_language_path
     )
     if not valid_paths:
         raise AssertionError(
             "FATAL: Comprehensive path assertion failed. Please check paths: \n" + 
-            f"current_dir = \'{current_dir}\', " + 
+            f"base_directory = \'{base_directory}\', " + 
             ("PASSED\n" if paths_tested[0] else "FAILED\n") + 
             f"language_list_path = \'{language_list_path}\', " + 
             ("PASSED\n" if paths_tested[1] else "FAILED\n") + 
@@ -136,7 +138,7 @@ def main():
             f"prefered_language_path = \'{prefered_language_path}\', " + 
             ("PASSED\n" if paths_tested[3] else "FAILED\n")
         )
-        
+
     # Ensure that a language and desired message to query for were given 
     if (not language or not message) and translation_mode:
         raise ValueError(
