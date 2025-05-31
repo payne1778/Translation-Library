@@ -98,11 +98,12 @@ def main():
         language, message, section, message_args = populate_translation_vars(args)
 
     # Create paths for various TOML files and the current directory 
-    current_dir = os.getcwd().replace('\\', '/').replace('"', '')
-    language_list_path = f"{current_dir}/languages.toml" 
-    default_language_path = f"{current_dir}/english.toml"
+    current_dir = os.pardir.replace('\\', '/').replace('"', '')
+    language_list_path = f"{current_dir}/lib/languages.toml" 
+    default_language_path = f"{current_dir}/lib/english.toml"
     prefered_language_path = (
-        f"{current_dir}/{language}.toml" if translation_mode else default_language_path
+        f"{current_dir}/lib/{language}.toml" 
+        if translation_mode else default_language_path
     )
 
     ### CHECKS ###
