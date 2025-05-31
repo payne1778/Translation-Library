@@ -6,6 +6,7 @@ def get_toml_dict(toml_path) -> dict:
     with open(toml_path, "rb") as f:
         return tomllib.load(f)
 
+
 def populate_translation_vars(args):
     language = args[2].lower() if len(args) != 0 else None
     message = args[3] if len(args)          != 0 else None
@@ -16,6 +17,7 @@ def populate_translation_vars(args):
         {k: v for k, v in (arg.split("=") for arg in message_args)} if message_args else None
     )
     return language, message, section, message_args
+
 
 def print_message(toml_path, message, section=None, message_args=None) -> None:
     try: 
@@ -57,6 +59,7 @@ def print_message(toml_path, message, section=None, message_args=None) -> None:
                 "Please recheck language files and/or parameter inputs and spelling."
             )
 
+
 def print_message_handler(prefered_path, default_path, message, section, message_args):
     try:
         print_message(prefered_path, message, section, message_args)
@@ -71,15 +74,20 @@ def print_message_handler(prefered_path, default_path, message, section, message
             print(f"Could not obtain translation from: {default_path}. due to {e2}. ")
             raise SystemError("FATAL: Translation files could not be loaded")
 
+
 def get_available_languages(toml_path) -> list:
     return [language for language in get_toml_dict(toml_path).values()]
+
 
 def is_available_language(toml_path, language) -> bool:
     toml_dict = get_toml_dict(toml_path)
     return language in toml_dict or language in toml_dict.values()
 
-def are_valid_paths(*paths) -> bool:
-    return not any(not os.path.exists(path) for path in paths)
+
+def are_valid_paths(*paths) -> list and bool:
+    paths_tested = [os.path.exists(path) for path in paths]
+    return paths_tested, not any(False for path in paths_tested)
+
 
 def main():
     translation_commands = {"get-translation", "translation", "translate"}
@@ -98,7 +106,7 @@ def main():
         language, message, section, message_args = populate_translation_vars(args)
 
     # Create paths for various TOML files and the current directory 
-    current_dir = os.pardir.replace('\\', '/').replace('"', '')
+    current_dir = os.getcwd().replace('\\', '/').replace('"', '')
     language_list_path = f"{current_dir}/lib/languages.toml" 
     default_language_path = f"{current_dir}/lib/english.toml"
     prefered_language_path = (
@@ -110,9 +118,32 @@ def main():
 
     # Check to make sure that all nessecary paths exist
     # This mainly ensures that everything is located where is should be
-    if not are_valid_paths(current_dir, language_list_path, 
-        default_language_path, prefered_language_path):
-            raise AssertionError("FATAL: Comprehensive path assertion failed.")
+    paths_tested, valid_paths = are_valid_paths(
+        current_dir, language_list_path, default_language_path, prefered_language_path
+    )
+    if not valid_paths:
+        raise AssertionError(
+            "FATAL: Comprehensive path assertion failed. Please check paths: \n" + 
+            f"current_dir = \'{current_dir}\', " + 
+            ("PASSED\n" if paths_tested[0] else "FAILED\n") + 
+            f"language_list_path = \'{language_list_path}\', " + 
+            ("PASSED\n" if paths_tested[1] else "FAILED\n") + 
+            f"default_language_path = \'{default_language_path}\', " + 
+            ("PASSED\n" if paths_tested[2] else "FAILED\n") + 
+            f"prefered_language_path = \'{prefered_language_path}\', " + 
+            ("PASSED\n" if paths_tested[3] else "FAILED\n")
+        )
+
+    print(
+        f"current_dir = \'{current_dir}\', " + 
+        ("PASSED\n" if paths_tested[0] else "FAILED\n") + 
+        f"language_list_path = \'{language_list_path}\', " + 
+        ("PASSED\n" if paths_tested[1] else "FAILED\n") + 
+        f"default_language_path = \'{default_language_path}\', " + 
+        ("PASSED\n" if paths_tested[2] else "FAILED\n") + 
+        f"prefered_language_path = \'{prefered_language_path}\', " + 
+        ("PASSED\n" if paths_tested[3] else "FAILED\n")
+    )
 
     # Ensure that a language and desired message to query for were given 
     if not language or not message:

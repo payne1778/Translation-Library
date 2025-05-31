@@ -42,7 +42,7 @@ public class Translator {
 
         System.out.println(command.toString());
 
-        String line = "";
+        String outputLines = "", errorLines = "", line = "";
         try {
 
             // Build and start the process to run the translator Python script
@@ -54,11 +54,13 @@ public class Translator {
 
             // Store translated output string into line variable
             while ((line = inputReader.readLine()) != null) {
-                if (line.contains("TRANSLATION") || line.contains("OUTPUT")){
-                    line = line.replace("TRANSLATION: ", "")
-                               .replace("OUTPUT: ", "").trim();
+                if (outputLines.contains("TRANSLATION") || outputLines.contains("OUTPUT")){
+                    outputLines = (
+                        outputLines.replace("TRANSLATION: ", "").replace("OUTPUT: ", "").trim()
+                    );
                     break;
                 }
+                outputLines += (line + "\n");
             }
 
             // Wait for the process to exit
@@ -70,12 +72,15 @@ public class Translator {
                 BufferedReader errorReader = new BufferedReader(
                     new InputStreamReader(process.getErrorStream()));
 
-                while ((line = errorReader.readLine()) != null) {
-                    System.out.println((line)); 
+                while ((errorLines = errorReader.readLine()) != null) {
+                    // System.out.println(errorLines); 
+                    outputLines += (errorLines + '\n');
                 }
                 errorReader.close();
-                line = "An error has occured with obtaining the translation. " +
-                        "Please check the terminal for more information."; 
+                outputLines += (
+                    "An error has occured with obtaining the translation. " +
+                    "Please check the terminal for more information."
+                ); 
             }
 
             // Destroy the created process and close buffers 
@@ -88,6 +93,6 @@ public class Translator {
         }
 
         // Return python script output 
-        return line;
+        return outputLines;
     }
 }
