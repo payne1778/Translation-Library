@@ -1,8 +1,10 @@
 package TranslationLibrary;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader; 
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Translator {
     private static String pythonScriptPath = "src/translator.py";
@@ -31,7 +33,7 @@ public class Translator {
 
         command.add(pythonInterpreter);
         command.add(pythonScriptPath);
-        command.add("translation"); 
+        command.add("translation");
         command.add(prefferedLanguage);
         command.add(messageToGet);
         command.add(sectionName);
@@ -40,8 +42,22 @@ public class Translator {
             command.add(arg.toString());
         }
 
-        System.out.println(command.toString());
+        // System.out.println(command.toString());
 
+        return runCommand(command); 
+    }
+
+    public static List<String> getAvailableLanguages() {
+        ArrayList<String> command = new ArrayList<>();
+        command.add(pythonInterpreter);
+        command.add(pythonScriptPath);
+        command.add("list");
+
+        String[] languages = runCommand(command).replace("[", "").replace("]", "").trim().split(",");
+        return Arrays.asList(languages);
+    }
+
+    private static String runCommand(ArrayList<String> command) {
         String outputLines = "", errorLines = "", line = "";
         try {
 
@@ -54,10 +70,8 @@ public class Translator {
 
             // Store translated output string into line variable
             while ((line = inputReader.readLine()) != null) {
-                if (outputLines.contains("TRANSLATION") || outputLines.contains("OUTPUT")){
-                    outputLines = (
-                        outputLines.replace("TRANSLATION: ", "").replace("OUTPUT: ", "").trim()
-                    );
+                if (line.contains("TRANSLATION") || line.contains("OUTPUT")){
+                    outputLines = line.replace("TRANSLATION: ", "").replace("OUTPUT: ", "").trim();
                     break;
                 }
                 outputLines += (line + "\n");
@@ -73,12 +87,11 @@ public class Translator {
                     new InputStreamReader(process.getErrorStream()));
 
                 while ((errorLines = errorReader.readLine()) != null) {
-                    // System.out.println(errorLines); 
                     outputLines += (errorLines + '\n');
                 }
                 errorReader.close();
                 outputLines += (
-                    "An error has occured with obtaining the translation. " +
+                    "An error occured when interating with " + pythonScriptPath + ". " +
                     "Please check the terminal for more information."
                 ); 
             }
