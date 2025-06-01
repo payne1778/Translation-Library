@@ -9,58 +9,151 @@ import java.util.List;
 public class Translator {
     private static String pythonScriptPath = "src/translator.py";
     private static String pythonInterpreter = "python";
-    private static String prefferedLanguage = "english"; 
+    private static String prefferedLanguage = "English"; 
 
-    public Translator(String pythonScriptPath, String pythonInterpreter, String prefferedLanguage) {
-        
-        if (pythonScriptPath.isEmpty() || pythonInterpreter.isEmpty() || prefferedLanguage.isEmpty()) {
-            System.out.println("One of the constructor arguments was empty. Please recheck your inputs");
-            System.out.printf(
-                "pythonScriptPath=%s, pythonInterpreter=%s, prefferedLanguage=%s\n", 
-                pythonScriptPath, pythonInterpreter, prefferedLanguage
-            );
-        }
-
-        Translator.pythonScriptPath = pythonScriptPath;
-        Translator.pythonInterpreter = pythonScriptPath;
-        Translator.prefferedLanguage = prefferedLanguage;
+    public static String getPythonScriptPath() {
+        return Translator.pythonScriptPath; 
     }
 
+    public static String getPythonInterpreter() {
+        return Translator.pythonInterpreter; 
+    }
+
+    public static String getPrefferedLanguage() {
+        return Translator.prefferedLanguage; 
+    }
+
+    public static void setPythonScriptPath(String newPythonScriptPath) {
+        if (isEmptyParameter(newPythonInterpreter, "setPythonScriptPath")) return; 
+        Translator.pythonScriptPath = newPythonScriptPath;
+    }
+
+    public static void setPythonInterpreter(String newPythonInterpreter) {
+        if (!containsIgnoreCase("python", newPythonInterpreter)) return;
+        if (isEmptyParameter(newPythonInterpreter, "setPythonInterpreter")) return; 
+        Translator.pythonInterpreter = newPythonInterpreter; 
+    }
+
+    public static void setPrefferedLanguage(String newPrefferedLanguage) {
+        if (isEmptyParameter(newPythonInterpreter, "setPrefferedLanguage")) return; 
+        if (!getAvailableLanguages().contains(newPrefferedLanguage)) {
+            System.out.printf(
+                "The given preffered language \"%s\" is not supported.\n", newPrefferedLanguage
+            );
+            System.out.println("Corroborate your spelling with the relevant TOML file/entry.");
+            return;
+        }
+        Translator.prefferedLanguage = newPrefferedLanguage;
+    }
+
+    public static void printCurrentFields() {
+        System.out.printf(
+            "Current Settings: pythonScriptPath=%s, pythonInterpreter=%s, prefferedLanguage=%s\n", 
+            getPythonScriptPath(), getPythonInterpreter(), getPrefferedLanguage()
+        );
+    }
+
+    public static boolean containsIgnoreCase(String source, String target) {
+        return source != null && target != null &&
+           source.toLowerCase().contains(target.toLowerCase());
+    }
+
+    private static Boolean isEmptyParameter(String varToCheck, String methodName) {
+        if (varToCheck.isEmpty()) {
+            System.out.printf("Your parameter passed to %s() was empty. Please recheck this input.\n", methodName);
+            printCurrentFields();
+            return True;
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * 
+     * Example: "python translator.py get-translation English welcome gamestart name=Blake"
+     * 
+     * @param messageToGet
+     * @param sectionName
+     * @param args
+     * @return
+     */
     public static String getTranslation(String messageToGet, String sectionName, Object... args) {
         
-        // Build the command. Example: "python translator.py translation english welcome sectionname arg1 arg2 ..."
-        ArrayList<String> command = new ArrayList<>();
+        // Build the command
+        ArrayList<String> command = new ArrayList<>(Arrays.asList(
+            pythonInterpreter, 
+            pythonScriptPath, 
+            "get-translation", 
+            prefferedLanguage, 
+            messageToGet,
+            sectionName
+        ));
 
-        command.add(pythonInterpreter);
-        command.add(pythonScriptPath);
-        command.add("translation");
-        command.add(prefferedLanguage);
-        command.add(messageToGet);
-        command.add(sectionName);
-
+        // Append optional args to the command
         for (Object arg : args) {
             command.add(arg.toString());
         }
 
-        // System.out.println(command.toString());
-
+        // Run the command and return its output 
         return runCommand(command); 
     }
 
-    public static List<String> getAvailableLanguages() {
-        ArrayList<String> command = new ArrayList<>();
-        command.add(pythonInterpreter);
-        command.add(pythonScriptPath);
-        command.add("list");
+    /**
+     * 
+     * 
+     * Example: "python translator.py get-translation English welcome "" name=Blake"
+     * 
+     * @param messageToGet
+     * @param args
+     * @return
+     */
+    public static String getTranslation(String messageToGet, Object... args) {
+        
+        // Build the command
+        ArrayList<String> command = new ArrayList<>(Arrays.asList(
+            pythonInterpreter, 
+            pythonScriptPath, 
+            "get-translation", 
+            prefferedLanguage, 
+            messageToGet,
+            ""
+        ));
 
-        String[] languages = runCommand(command).replace("[", "").replace("]", "").trim().split(",");
+        // Append optional args to the command
+        for (Object arg : args) {
+            command.add(arg.toString());
+        }
+
+        // Run the command and return its output 
+        return runCommand(command); 
+    }
+
+    public static List<String> getAvailableLanguagesList() {
+        ArrayList<String> command = new ArrayList<>(Arrays.asList(
+            pythonInterpreter, 
+            pythonScriptPath, 
+            "list"
+        ));
+
+        String[] languages = runCommand(command)
+            .replace("[", "")
+            .replace("]", "")
+            .trim()
+            .split(",");
+
         return Arrays.asList(languages);
     }
 
+    /**
+     * Scary!
+     * 
+     * @param command
+     * @return
+     */
     private static String runCommand(ArrayList<String> command) {
+        
         String outputLines = "", errorLines = "", line = "";
         try {
-
             // Build and start the process to run the translator Python script
             Process process = new ProcessBuilder(command).start();
 
@@ -68,7 +161,8 @@ public class Translator {
             BufferedReader inputReader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
-            // Store translated output string into line variable
+            // Store output from line variable into outputLines variable
+            // Will break out of loop if the string containing "TRANSLATION" or "OUTPUT" is found 
             while ((line = inputReader.readLine()) != null) {
                 if (line.contains("TRANSLATION") || line.contains("OUTPUT")){
                     outputLines = line.replace("TRANSLATION: ", "").replace("OUTPUT: ", "").trim();
@@ -81,7 +175,7 @@ public class Translator {
             int exitCode = process.waitFor();
             System.out.println("Exited with code: " + exitCode);
 
-            // If there was an error, get and print the error output  
+            // If there was an error, append error output to outputLines for it to get returned
             if (exitCode != 0){
                 BufferedReader errorReader = new BufferedReader(
                     new InputStreamReader(process.getErrorStream()));

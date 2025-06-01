@@ -6,12 +6,11 @@ public class Main {
     public static void main(String[] args) {
         System.out.println(Translator.getTranslation(
             "welcome", 
-            "start", 
-            "name=Blake"
+            "start"
         ));
 
-        List<String> list = Translator.getAvailableLanguages();
-        System.out.println(list.get(0));
-        System.out.println(list.get(1));
+        List<String> list = Translator.getAvailableLanguagesList();
+        // System.out.println(list.get(0));
+        // System.out.println(list.get(1));
     }
 }
