@@ -43,7 +43,7 @@ def populate_translation_vars(
             f"section_name={section}, message_args={message_args}"
         )
         raise Exception(
-            "FATAL: An unknown error occured while populating translation variables.\n" +
+            "FATAL: An unknown error occurred while populating translation variables.\n" +
             f"Check the following: language_name={language}, variable_name={message}, " + 
             f"section_name={section}, message_args={message_args}"
         )
@@ -64,7 +64,7 @@ def print_translated_message(
         message_args: list[str] = None
     ) -> None:
     """
-    Prints the translated message with the given arguements. 
+    Prints the translated message with the given arguments. 
 
     :param toml_path: The path to the toml file to be loaded
     :param message: The name of the variable in the language toml file that contains 
@@ -197,7 +197,7 @@ def are_valid_paths(*paths: str) -> list[bool] and bool:
 
 
 def main():
-    # Intialize all available commands as separate lists for easier maintainability 
+    # Initialize all available commands as separate lists for easier maintainability 
     translation_commands = ["get-translation", "translation", "translate"]
     list_languages_commands = ["get-available", "list", "list-available", "get-list"]
     list_languages_anglicized_commands = [
@@ -211,15 +211,15 @@ def main():
 
     # Check if the desired task was a translation query or language support verification 
     translation_mode = selection in translation_commands
-    langauge_supported_checker_mode = selection in is_available_language_commands
+    language_supported_checker_mode = selection in is_available_language_commands
 
-    # If translation_mode, then capture relevant/nessecary translation args
+    # If translation_mode, then capture relevant/necessary translation args
     language, message, section, message_args = ("", "", "", "")
     if translation_mode:
         language, message, section, message_args = populate_translation_vars(args)
     
-    # If langauge_supported_checker_mode, then capture the language name to check 
-    if langauge_supported_checker_mode:
+    # If language_supported_checker_mode, then capture the language name to check 
+    if language_supported_checker_mode:
         language = args[2].lower()
 
     # Create paths for various TOML files and the project's base directory 
@@ -235,7 +235,7 @@ def main():
 
     ### CHECKS ###
 
-    # Check to make sure that all nessecary paths exist
+    # Check to make sure that all necessary paths exist
     # This mainly ensures that everything is located where is should be
     paths_tested, valid_paths = are_valid_paths(
         base_directory, language_list_path, default_language_path, preferred_language_path

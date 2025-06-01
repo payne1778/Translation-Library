@@ -9,7 +9,7 @@ import java.util.List;
 public class Translator {
     private static String pythonScriptPath = "src/Python/translator.py";
     private static String pythonInterpreter = "python";
-    private static String prefferedLanguage = "English";
+    private static String preferredLanguage = "English";
 
     // Getters and setters for above fields 
 
@@ -21,8 +21,8 @@ public class Translator {
         return Translator.pythonInterpreter; 
     }
 
-    public static String getPrefferedLanguage() {
-        return Translator.prefferedLanguage; 
+    public static String getPreferredLanguage() {
+        return Translator.preferredLanguage; 
     }
 
     public static void setPythonScriptPath(String newPythonScriptPath) {
@@ -36,21 +36,21 @@ public class Translator {
         Translator.pythonInterpreter = newPythonInterpreter; 
     }
 
-    public static void setPrefferedLanguage(String newPrefferedLanguage) {
-        if (isEmptyParam(newPythonInterpreter, "setPrefferedLanguage")) return; 
-        if (!getAvailableLanguages().contains(newPrefferedLanguage) ||
-            !getAnglicizedAvailableLanguagesList().contains(newPrefferedLanguage)
+    public static void setPreferredLanguage(String newPreferredLanguage) {
+        if (isEmptyParam(newPythonInterpreter, "setPreferredLanguage")) return; 
+        if (!getAvailableLanguages().contains(newPreferredLanguage) ||
+            !getAnglicizedAvailableLanguagesList().contains(newPreferredLanguage)
         ) {
             System.out.printf(
-                "The given preffered language \"%s\" is not supported.\n", 
-                newPrefferedLanguage
+                "The given preferred language \"%s\" is not supported.\n", 
+                newPreferredLanguage
             );
             System.out.println(
                 "Corroborate your spelling with the relevant TOML file/entry."
             );
             return;
         }
-        Translator.prefferedLanguage = newPrefferedLanguage;
+        Translator.preferredLanguage = newPreferredLanguage;
     }
 
     /**
@@ -59,8 +59,8 @@ public class Translator {
     public static void printCurrentFields() {
         
         System.out.printf(
-            "Current: pythonScriptPath=%s, pythonInterpreter=%s, prefferedLanguage=%s\n", 
-            getPythonScriptPath(), getPythonInterpreter(), getPrefferedLanguage()
+            "Current: pythonScriptPath=%s, pythonInterpreter=%s, preferredLanguage=%s\n", 
+            getPythonScriptPath(), getPythonInterpreter(), getPreferredLanguage()
         );
     }
 
@@ -114,7 +114,7 @@ public class Translator {
             pythonInterpreter, 
             pythonScriptPath, 
             "get-translation", 
-            prefferedLanguage, 
+            preferredLanguage, 
             messageToGet,
             sectionName
         ));
@@ -139,12 +139,12 @@ public class Translator {
      */
     public static String getTranslation(String messageToGet, Object... args) {
         
-        // Build the "get-translation" command with no "section_name" arugment 
+        // Build the "get-translation" command with no "section_name" argument 
         ArrayList<String> command = new ArrayList<>(Arrays.asList(
             pythonInterpreter, 
             pythonScriptPath, 
             "get-translation", 
-            prefferedLanguage, 
+            preferredLanguage, 
             messageToGet,
             ""
         ));
@@ -225,7 +225,7 @@ public class Translator {
             language
         ));
 
-        // Initalize a return boolean to false. Change it if the Python output was true 
+        // Initialize a return boolean to false. Change it if the Python output was true 
         boolean result = false;
         if (runCommand(command).equalsIgnoreCase("true")) {
             result = true;
@@ -234,7 +234,7 @@ public class Translator {
     }
 
     /**
-     * Takens in a built command represented as a list of arguments. (Scary!)
+     * Takes in a built command represented as a list of arguments. (Scary!)
      * 
      * @param command   The built Python command to be run 
      * @return          The output of said Python command 
@@ -277,7 +277,7 @@ public class Translator {
                 }
                 errorReader.close();
                 outputLines += (
-                    "An error occured when interating with " + pythonScriptPath + ". " +
+                    "An error occurred when interacting with " + pythonScriptPath + ". " +
                     "Please check the terminal for more information."
                 ); 
             }
