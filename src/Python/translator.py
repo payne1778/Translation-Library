@@ -6,7 +6,7 @@ import os
 
 def get_toml_dict(toml_path: str) -> dict: 
     """
-    Return a toml file as a dictionary of key value pairs from a designated directory path. 
+    Return a toml file as a dictionary of key-value pairs from a specified directory path. 
 
     :param toml_path: The path to the toml file to be loaded
     :return: The entire toml file represented as a dictionary of variable_name string keys
@@ -270,7 +270,11 @@ def main():
     match selection:
         case s if s in translation_commands:
             print_translated_message_handler(
-                preferred_language_path, default_language_path, message, section, message_args
+                preferred_language_path, 
+                default_language_path, 
+                message, 
+                section, 
+                message_args
             )
         case s if s in list_languages_commands:
             print(
@@ -282,7 +286,7 @@ def main():
             )
         case s if s in is_available_language_commands: 
             print(
-                "OUTPUT: " + str(is_available_language(language_list_path, language)).lower()
+                "OUTPUT: " + str(is_available_language(language_list_path, language))
             )
         case "help":
             print("figure it out >:(")
