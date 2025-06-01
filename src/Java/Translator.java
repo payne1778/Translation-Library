@@ -26,25 +26,28 @@ public class Translator {
     }
 
     public static void setPythonScriptPath(String newPythonScriptPath) {
-        if (isEmptyParameter(newPythonInterpreter, "setPythonScriptPath")) return; 
+        if (isEmptyParam(newPythonInterpreter, "setPythonScriptPath")) return; 
         Translator.pythonScriptPath = newPythonScriptPath;
     }
 
     public static void setPythonInterpreter(String newPythonInterpreter) {
         if (!containsIgnoreCase("python", newPythonInterpreter)) return;
-        if (isEmptyParameter(newPythonInterpreter, "setPythonInterpreter")) return; 
+        if (isEmptyParam(newPythonInterpreter, "setPythonInterpreter")) return; 
         Translator.pythonInterpreter = newPythonInterpreter; 
     }
 
     public static void setPrefferedLanguage(String newPrefferedLanguage) {
-        if (isEmptyParameter(newPythonInterpreter, "setPrefferedLanguage")) return; 
+        if (isEmptyParam(newPythonInterpreter, "setPrefferedLanguage")) return; 
         if (!getAvailableLanguages().contains(newPrefferedLanguage) ||
             !getAnglicizedAvailableLanguagesList().contains(newPrefferedLanguage)
         ) {
             System.out.printf(
-                "The given preffered language \"%s\" is not supported.\n", newPrefferedLanguage
+                "The given preffered language \"%s\" is not supported.\n", 
+                newPrefferedLanguage
             );
-            System.out.println("Corroborate your spelling with the relevant TOML file/entry.");
+            System.out.println(
+                "Corroborate your spelling with the relevant TOML file/entry."
+            );
             return;
         }
         Translator.prefferedLanguage = newPrefferedLanguage;
@@ -56,7 +59,7 @@ public class Translator {
     public static void printCurrentFields() {
         
         System.out.printf(
-            "Current Settings: pythonScriptPath=%s, pythonInterpreter=%s, prefferedLanguage=%s\n", 
+            "Current: pythonScriptPath=%s, pythonInterpreter=%s, prefferedLanguage=%s\n", 
             getPythonScriptPath(), getPythonInterpreter(), getPrefferedLanguage()
         );
     }
@@ -82,7 +85,7 @@ public class Translator {
      * @param methodName    The name of the method that the parameter was passed to 
      * @return              True if the parameter is empty, false otherwise
      */
-    private static boolean isEmptyParameter(String paramToCheck, String methodName) {
+    private static boolean isEmptyParam(String paramToCheck, String methodName) {
         
         if (paramToCheck.isEmpty()) {
             System.out.println("The parameter passed to " + methodName + " was empty.");
@@ -106,7 +109,7 @@ public class Translator {
         String messageToGet, String sectionName, Object... args
     ) {
         
-        // Build the command
+        // Build the "get-translation" command
         ArrayList<String> command = new ArrayList<>(Arrays.asList(
             pythonInterpreter, 
             pythonScriptPath, 
@@ -136,7 +139,7 @@ public class Translator {
      */
     public static String getTranslation(String messageToGet, Object... args) {
         
-        // Build the command
+        // Build the "get-translation" command with no "section_name" arugment 
         ArrayList<String> command = new ArrayList<>(Arrays.asList(
             pythonInterpreter, 
             pythonScriptPath, 
@@ -163,18 +166,21 @@ public class Translator {
      */
     public static List<String> getAvailableLanguagesList() {
         
+        // Build the "list" command
         ArrayList<String> command = new ArrayList<>(Arrays.asList(
             pythonInterpreter, 
             pythonScriptPath, 
             "list"
         ));
 
+        // Convert the string version of Python's languages list into a Java string array 
         String[] languages = runCommand(command)
             .replace("[", "")
             .replace("]", "")
             .trim()
             .split(",");
-
+        
+        // Return the languages string array as a list 
         return Arrays.asList(languages);
     }
 
@@ -186,18 +192,21 @@ public class Translator {
      */
     public static List<String> getAnglicizedAvailableLanguagesList() {
         
+        // Build the "list-anglicized" command
         ArrayList<String> command = new ArrayList<>(Arrays.asList(
             pythonInterpreter, 
             pythonScriptPath, 
             "list-anglicized"
         ));
 
+        // Convert the string version of Python's languages list into a Java string array 
         String[] languages = runCommand(command)
             .replace("[", "")
             .replace("]", "")
             .trim()
             .split(",");
 
+        // Return the languages string array as a list 
         return Arrays.asList(languages);
     }
 
@@ -208,6 +217,7 @@ public class Translator {
      */
     public static boolean isSupportedLanguage(String language) {
         
+        // Build the "is-supported" command
         ArrayList<String> command = new ArrayList<>(Arrays.asList(
             pythonInterpreter, 
             pythonScriptPath, 
@@ -215,6 +225,7 @@ public class Translator {
             language
         ));
 
+        // Initalize a return boolean to false. Change it if the Python output was true 
         boolean result = false;
         if (runCommand(command).equalsIgnoreCase("true")) {
             result = true;
@@ -243,7 +254,10 @@ public class Translator {
             // Will break loop if the string containing "TRANSLATION" or "OUTPUT" is found 
             while ((line = inputReader.readLine()) != null) {
                 if (line.contains("TRANSLATION") || line.contains("OUTPUT")){
-                    outputLines = line.replace("TRANSLATION: ", "").replace("OUTPUT: ", "").trim();
+                    outputLines = line
+                        .replace("TRANSLATION: ", "")
+                        .replace("OUTPUT: ", "")
+                        .trim();
                     break;
                 }
                 outputLines += (line + "\n");
@@ -253,7 +267,7 @@ public class Translator {
             int exitCode = process.waitFor();
             System.out.println("Exited with code: " + exitCode);
 
-            // If there was an error, append error output to outputLines for it to get returned
+            // If there was an error, append error to outputLines so it can get returned
             if (exitCode != 0){
                 BufferedReader errorReader = new BufferedReader(
                     new InputStreamReader(process.getErrorStream()));
