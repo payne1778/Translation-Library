@@ -79,7 +79,7 @@ This would output:
 TRANSLATION: Welcome Blake!
 ```
 
-### Things to note
+#### Things to note
 
 - Placeholder arguments are optional, so an empty string (`""`) is not necessary. However, if the desired variable is not under a specific section, an empty string must be passed in. 
 - The `[translation_command]`, `[language_name]`, and all placeholder argument values are not case sensitive (like `Translate` and `English` and `Blake` for `name=Blake`, respectively). 
@@ -88,12 +88,12 @@ TRANSLATION: Welcome Blake!
 ### List Supported Languages
 
 ```bash
-$ python src/Python/translator.py [list_command] [language_name] 
+$ python src/Python/translator.py [list_command]
 ```
 
 Accepted translation commands (in the the first argument's place) include: `get-available`, `list`, and `list-available`
 
-### Examples
+### Example
 
 If in `lib/languages.toml`, there are these entries: 
 ```toml
@@ -109,6 +109,72 @@ $ python src/Python/translator.py list
 This would output:
 ```bash
 OUTPUT: ['English', 'Deutsch']
+```
+
+### List Supported Languages (Anglicized)
+
+```bash
+$ python src/Python/translator.py [list_anglicized_command]
+```
+
+Accepted translation commands (in the the first argument's place) include: `get-anglicized-list`, `list-anglicized`, `anglicized-list`
+
+### Example
+
+If in `lib/languages.toml`, there are these entries: 
+```toml
+english = "English"
+german = "Deutsch"
+```
+
+The python command might look like:
+```bash
+$ python src/Python/translator.py list-anglicized
+```
+
+This would output:
+```bash
+OUTPUT: ['english', 'german']
+```
+
+### Check if a Language is Supported 
+
+```bash
+$ python src/Python/translator.py [is_supported_command] [language_name] 
+```
+
+Accepted translation commands (in the the first argument's place) include: `is-supported`, `is-available`, `check-supported`
+
+### Examples
+
+Consider in `lib/languages.toml`, there are these entries: 
+```toml
+english = "English"
+german = "Deutsch"
+```
+
+### The Language is Supported
+
+The python command might look like:
+```bash
+$ python src/Python/translator.py is-supported English 
+```
+
+This would output:
+```bash
+OUTPUT: True
+```
+
+### The Language is Not Supported
+
+The python command might look like:
+```bash
+$ python src/Python/translator.py is-supported Polish  
+```
+
+This would output:
+```bash
+OUTPUT: False
 ```
 
 ## Java

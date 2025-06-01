@@ -169,7 +169,7 @@ def get_available_languages_anglicized(toml_path: str) -> list[str]:
     return [language for language in get_toml_dict(toml_path)]
 
 
-def is_available_language(toml_path: str, language: str) -> bool:
+def is_supported_language(toml_path: str, language: str) -> bool:
     """
     Checks to see if a given language is supported. 
 
@@ -203,7 +203,7 @@ def main():
     list_languages_anglicized_commands = [
         "get-anglicized-list", "list-anglicized", "anglicized-list"
     ]
-    is_available_language_commands = ["is-available", "is-supported"]
+    is_supported_language_commands = ["is-supported", "is-available", "check-supported"]
     
     # Capture command line arguments and store desired task selection 
     args = sys.argv
@@ -211,7 +211,7 @@ def main():
 
     # Check if the desired task was a translation query or language support verification 
     translation_mode = selection in translation_commands
-    language_supported_checker_mode = selection in is_available_language_commands
+    language_supported_checker_mode = selection in is_supported_language_commands
 
     # If translation_mode, then capture relevant/necessary translation args
     language, message, section, message_args = ("", "", "", "")
@@ -261,7 +261,7 @@ def main():
         )
     
     # Ensure that the desired language is supported 
-    if (not is_available_language(language_list_path, language)) and translation_mode:
+    if (not is_supported_language(language_list_path, language)) and translation_mode:
         raise NotImplementedError(
             f"FATAL: The language \"{language}\" is not supported. " +
             "Corroborate your spelling with the relevant TOML file/entry."
@@ -284,9 +284,9 @@ def main():
             print(
                 "OUTPUT: " + str(get_available_languages_anglicized(language_list_path))
             )
-        case s if s in is_available_language_commands: 
+        case s if s in is_supported_language_commands: 
             print(
-                "OUTPUT: " + str(is_available_language(language_list_path, language))
+                "OUTPUT: " + str(is_supported_language(language_list_path, language))
             )
         case "help":
             print("figure it out >:(")
