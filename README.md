@@ -1,21 +1,20 @@
 # Translation-Library
 TOML-based translation library with Python and Java implementation support
 
-## How to run:
+## Python 
 
-You must be in the `Translation-Library` directory for the pathing to work. 
+The Python implementation is still under development and may be under-documented in the code. If you encounter any errors or would like to suggest some feedback, consider opening an issue on GitHub. 
 
-For example, your terminal's absolute path must match:
+For the following feature examples, it is assumed that you are in the `Translation-Library` directory so that the `src/Python/translator.py` path works. However, this script can be ran virtually anywhere, as long as the absolute path of the script is given as a command line argument to your `python` interpreter. 
 
 ```bash
-/home/user/Projects/Translation-Library
+# Absolute path example
+/home/user/Projects/Translation-Library/src/Python/translator.py 
 ```
-
-## Python 
 
 ### Get Translation from File
 ```bash
-$ python src/Python/translator.py [translation_command] [language_name] [variable_name] [category_name] [placeholder_arg1] ... 
+$ python src/Python/translator.py [translation_command] [language_name] [variable_name] [section_name] [placeholder_arg1] ... 
 ```
 
 Accepted translation commands (in the the first argument's place) include: `get-translation`, `translation`, and `translate`
@@ -84,7 +83,7 @@ TRANSLATION: Welcome Blake!
 
 - Placeholder arguments are optional, so an empty string (`""`) is not nessacery. However, if the desired variable is not under a specific section, an empty string must be passed in. 
 - The `[translation_command]`, `[language_name]`, and all placeholder argument values are not case sensitive (like `Translate` and `English` and `Blake` for `name=Blake`, respectively). 
-- The `[variable_name]`, `[category_name]`, and all placeholder argument keys (like `welcome` and `start` and `name` for `name=Blake`, respectively) ARE case sensitive. If any case-senstive input is incorrect, the script will raise an error. 
+- The `[variable_name]`, `[section_name]`, and all placeholder argument keys (like `welcome` and `start` and `name` for `name=Blake`, respectively) ARE case sensitive. If any case-senstive input is incorrect, the script will raise an error. 
 
 ### List Supported Languages
 
@@ -114,4 +113,6 @@ OUTPUT: ['English', 'Deutsch']
 
 ## Java
 
-Documentation coming soon
+The Java implementation is still under development and may be under-documented in the code. If you encounter any errors or would like to suggest some feedback, consider opening an issue on GitHub. 
+
+Offical documentation coming soon
