@@ -1,2 +1,6 @@
+setting = "Dies ist die englische Sprachdatei" 
+hello = "Hallo {name}!"
+
 [start]
-welcome="hallo"
+section_name = "Diese Nachricht befindet sich im Abschnitt 'start'"
+welcome = "Willkommen, {name}!"
