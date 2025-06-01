@@ -20,17 +20,59 @@ $ python src/translator.py [translation_command] [language_name] [variable_name]
 
 Accepted translation commands (in the the first argument's place) include: `get-translation`, `translation`, and `translate`
 
-### Example
+### Examples
 
-If in `lib/english.toml`, there is this entry: 
+For the following examples, consider `lib/english.toml`, which has these entries:
 ```toml
-[gamestart]
-welcome="Welcome {name}!"
+setting = "This is the English language file" 
+hello = "Hello {name}"
+
+[start]
+section_name = "This message is under the start section"
+welcome = "Welcome {name}!"
 ```
 
-Then the python command might look like:
+### Get message with no section and no placeholder arguments
+
+The python command might look like:
 ```bash
-$ python src/translator.py get-translation english welcome gamestart name=Blake
+$ python src/translator.py Translate English setting ""
+```
+
+This would output:
+```bash
+TRANSLATION: This is the English language file
+```
+
+### Get message with no section and placeholder arguments
+
+The python command might look like:
+```bash
+$ python src/translator.py Translate English hello "" name=Blake
+```
+
+This would output:
+```bash
+TRANSLATION: Hello Blake!
+```
+
+### Get message under a section and no placeholder arguments
+
+The python command might look like:
+```bash
+$ python src/translator.py Translate English section_name start
+```
+
+This would output:
+```bash
+TRANSLATION: This message is under the start section
+```
+
+### Get message under a section with placeholder arguments
+
+The python command might look like:
+```bash
+$ python src/translator.py Translate English welcome start name=Blake
 ```
 
 This would output:
@@ -38,23 +80,29 @@ This would output:
 TRANSLATION: Welcome Blake!
 ```
 
+### Things to note
+
+- Placeholder arguments are optional, so an empty string (`""`) is not nessacery. However, if the desired variable is not under a specific section, an empty string must be passed in. 
+- The `[translation_command]`, `[language_name]`, and all placeholder argument values are not case sensitive (like `Translate` and `English` and `Blake` for `name=Blake`, respectively). 
+- The `[variable_name]`, `[category_name]`, and all placeholder argument keys (like `welcome` and `start` and `name` for `name=Blake`, respectively) ARE case sensitive. If any case-senstive input is incorrect, the script will raise an error. 
+
 ### List Supported Languages
 
 ```bash
-$ python src/translator.py [list_command] [language_name] [variable_name] [category_name] [placeholder_arg1] ... 
+$ python src/translator.py [list_command] [language_name] 
 ```
 
 Accepted translation commands (in the the first argument's place) include: `get-available`, `list`, and `list-available`
 
-### Example
+### Examples
 
 If in `lib/languages.toml`, there are these entries: 
 ```toml
-english="English"
-german="Deutsch"
+english = "English"
+german = "Deutsch"
 ```
 
-Then the python command might look like:
+The python command might look like:
 ```bash
 $ python src/translator.py list
 ```

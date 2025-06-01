@@ -1,7 +1,8 @@
+from pathlib import Path
+import typing
+import tomllib
 import sys
 import os
-import tomllib
-from pathlib import Path
 
 def get_toml_dict(toml_path) -> dict: 
     with open(toml_path, "rb") as f:
@@ -36,27 +37,28 @@ def print_message(toml_path, message, section=None, message_args=None) -> None:
         print("TRANSLATION: " + message_string)
     except KeyError: 
         if not section and not message_args:
-            KeyError(
-                f"Variable \"{message}\" in \'{toml_path}\' does not exist. " + 
+            raise KeyError(
+                f"Variable \"{message}\" in {toml_path} could not be found. " + 
+                f"(Is \"{message}\" under a section or not?) " +
                 "Please recheck language files and/or parameter inputs and spelling."
             )
         elif section and not message_args:
-            KeyError(
-                f"Section \"{section}\" or variable \"{message}\"" +
-                f" in \'{toml_path}\' does not exist. " +
+            raise KeyError(
+                f"Section \"{section}\" or variable \"{message}\" in {toml_path} " +
+                f"could not be found. (Is \"{message}\" under \"{section}\"?) " +
                 "Please recheck language files and/or parameter inputs and spelling."
             )
         elif not section and message_args:
-            KeyError(
-                f"Variable \"{message}\" or the variable's args \"{message_args}\"" +
-                f" in \'{toml_path}\' either do not exist or could not be inserted. " +
+            raise KeyError(
+                f"Variable \"{message}\" could not be found or the variable\'s args: " +
+                f"{message_args} in {toml_path} could not be inserted. " +
                 "Please recheck language files and/or parameter inputs and spelling."
             )
         else:
-            KeyError(
-                f"Variable \"{message}\" or Section \"{section}\" do not exist " +
-                f"or the variable's args \"{message_args}\" in \'{toml_path}\' " + 
-                f"could not be inserted. " + 
+            raise KeyError(
+                f"Variable \"{message}\" or section \"{section}\" could not be found " +
+                f"or the variable\'s args {message_args} in {toml_path} could not be " + 
+                f"inserted. (Is \"{message}\" under \"{section}\"?) " + 
                 "Please recheck language files and/or parameter inputs and spelling."
             )
 
@@ -89,7 +91,7 @@ def is_available_language(toml_path, language) -> bool:
     return language in toml_dict or language in toml_dict.values()
 
 
-def are_valid_paths(*paths) -> list and bool:
+def are_valid_paths(*paths) -> list[bool] and bool:
     paths_tested = [os.path.exists(path) for path in paths]
     return paths_tested, not any(False for path in paths_tested)
 
@@ -149,7 +151,7 @@ def main():
     # Ensure that the desired language is supported 
     if (not is_available_language(language_list_path, language)) and translation_mode:
         raise NotImplementedError(
-            f"FATAL: Language not supported: {language}" +
+            f"FATAL: The language \"{language}\" is not supported. " +
             "Corroborate your spelling with the relevant TOML file/entry."
         )
 
@@ -168,7 +170,7 @@ def main():
             print("figure it out >:(")
         case _:
             raise ValueError(
-                "FATAL: Corecheckuld not resolve input for desired task. " +
+                "FATAL: Could not determine the desired task. (Did you spell it right?) " +
                 "Please recheck this input or use help for more information"
             )
             
