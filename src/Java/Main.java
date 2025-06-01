@@ -5,13 +5,11 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         System.out.println(Translator.getTranslation(
-            "setting", 
-            ""
+            "setting"
         ));
 
         System.out.println(Translator.getTranslation(
-            "hello", 
-            "",
+            "hello",
             "name=Blake"
         ));
         

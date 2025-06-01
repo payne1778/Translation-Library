@@ -109,6 +109,18 @@ public class Translator {
         String messageToGet, String sectionName, Object... args
     ) {
         
+        // Checks to see if the user was wanting to call the other getTranslation() method
+        if(sectionName.contains("=")) {
+            Object[] newArgs = new Object[args.length + 1];
+            newArgs[0] = sectionName;
+            if(args.length >= 1) {
+                for (int i = 1; i < args.length + 1; i++) {
+                    newArgs[i] = args[i - 1];
+                }
+            }
+            return getTranslation(messageToGet, newArgs);
+        }
+
         // Build the "get-translation" command
         ArrayList<String> command = new ArrayList<>(Arrays.asList(
             pythonInterpreter, 
@@ -265,7 +277,7 @@ public class Translator {
 
             // Wait for the process to exit
             int exitCode = process.waitFor();
-            System.out.println("Exited with code: " + exitCode);
+            // System.out.println("Exited with code: " + exitCode); // Good for debugging
 
             // If there was an error, append error to outputLines so it can get returned
             if (exitCode != 0){
