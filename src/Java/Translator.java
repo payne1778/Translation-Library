@@ -96,21 +96,23 @@ public class Translator {
     }
 
     /**
-     * Returns the translated message based on the given parameters. 
+     * Returns the translated message string based on the given parameters. 
      * 
-     * @param messageToGet  The name of the variable in the language toml file that 
+     * @param variableName  The name of the variable in the language toml file that 
      *                      contains the message to be translated
-     * @param sectionName   The name of the section that the message might be under
+     * @param sectionName   The name of the section that the variable might be under
      * @param args          Optional objects of all placeholder args to be inserted 
-     *                      into the message
+     *                      into the message string 
      * @return              The translated message string
      */
     public static String getTranslation(
-        String messageToGet, String sectionName, Object... args
+        String variableName, String sectionName, Object... args
     ) {
         
         // Checks to see if the user was wanting to call the other getTranslation() method
         if(sectionName.contains("=")) {
+            
+            // If this condition is true, the other getTranslation() method is called 
             Object[] newArgs = new Object[args.length + 1];
             newArgs[0] = sectionName;
             if(args.length >= 1) {
@@ -118,7 +120,7 @@ public class Translator {
                     newArgs[i] = args[i - 1];
                 }
             }
-            return getTranslation(messageToGet, newArgs);
+            return getTranslation(variableName, newArgs);
         }
 
         // Build the "get-translation" command
@@ -127,7 +129,7 @@ public class Translator {
             pythonScriptPath, 
             "get-translation", 
             preferredLanguage, 
-            messageToGet,
+            variableName,
             sectionName
         ));
 
@@ -141,15 +143,15 @@ public class Translator {
     }
 
     /**
-     * Returns the translated message based on the given parameters. 
+     * Returns the translated message string based on the given parameters. 
      * 
-     * @param messageToGet  The name of the variable in the language toml file that 
+     * @param variableName  The name of the variable in the language toml file that 
      *                      contains the message to be translated
      * @param args          Optional objects of all placeholder args to be inserted
-     *                      into the message
+     *                      into the message string
      * @return              The translated message string
      */
-    public static String getTranslation(String messageToGet, Object... args) {
+    public static String getTranslation(String variableName, Object... args) {
         
         // Build the "get-translation" command with no "section_name" argument 
         ArrayList<String> command = new ArrayList<>(Arrays.asList(
@@ -157,7 +159,7 @@ public class Translator {
             pythonScriptPath, 
             "get-translation", 
             preferredLanguage, 
-            messageToGet,
+            variableName,
             ""
         ));
 
