@@ -203,18 +203,24 @@ def main():
     list_languages_anglicized_commands = [
         "get-anglicized-list", "list-anglicized", "anglicized-list"
     ]
+    is_available_language_commands = ["is-available", "is-supported"]
     
     # Capture command line arguments and store desired task selection 
     args = sys.argv
     selection = args[1].lower()
 
-    # Check if the desired task was to query for a translation
+    # Check if the desired task was a translation query or language support verification 
     translation_mode = selection in translation_commands
+    langauge_supported_checker_mode = selection in is_available_language_commands
 
     # If translation_mode, then capture relevant/nessecary translation args
     language, message, section, message_args = ("", "", "", "")
     if translation_mode:
         language, message, section, message_args = populate_translation_vars(args)
+    
+    # If langauge_supported_checker_mode, then capture the language name to check 
+    if langauge_supported_checker_mode:
+        language = args[2].lower()
 
     # Create paths for various TOML files and the project's base directory 
     base_directory = Path(__file__).resolve().parents[2]
@@ -273,6 +279,10 @@ def main():
         case s if s in list_languages_anglicized_commands: 
             print(
                 "OUTPUT: " + str(get_available_languages_anglicized(language_list_path))
+            )
+        case s if s in is_available_language_commands: 
+            print(
+                "OUTPUT: " + str(is_available_language(language_list_path, language)).lower()
             )
         case "help":
             print("figure it out >:(")

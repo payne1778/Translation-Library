@@ -33,5 +33,7 @@ public class Main {
         for (String lang : Translator.getAnglicizedAvailableLanguagesList()) {
             System.out.println(lang);
         }
+
+        System.out.println(Translator.isSupportedLanguage("English"));
     }
 }
