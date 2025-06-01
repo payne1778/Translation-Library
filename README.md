@@ -81,9 +81,9 @@ TRANSLATION: Welcome Blake!
 
 ### Things to note
 
-- Placeholder arguments are optional, so an empty string (`""`) is not nessacery. However, if the desired variable is not under a specific section, an empty string must be passed in. 
+- Placeholder arguments are optional, so an empty string (`""`) is not necessary. However, if the desired variable is not under a specific section, an empty string must be passed in. 
 - The `[translation_command]`, `[language_name]`, and all placeholder argument values are not case sensitive (like `Translate` and `English` and `Blake` for `name=Blake`, respectively). 
-- The `[variable_name]`, `[section_name]`, and all placeholder argument keys (like `welcome` and `start` and `name` for `name=Blake`, respectively) ARE case sensitive. If any case-senstive input is incorrect, the script will raise an error. 
+- The `[variable_name]`, `[section_name]`, and all placeholder argument keys (like `welcome` and `start` and `name` for `name=Blake`, respectively) ARE case sensitive. If any case-sensitive input is incorrect, the script will raise an error. 
 
 ### List Supported Languages
 
@@ -115,4 +115,4 @@ OUTPUT: ['English', 'Deutsch']
 
 The Java implementation is still under development and may be under-documented in the code. If you encounter any errors or would like to suggest some feedback, consider opening an issue on GitHub. 
 
-Offical documentation coming soon
+Official documentation coming soon
