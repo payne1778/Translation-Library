@@ -4,7 +4,7 @@ import tomllib
 import sys
 import os
 
-def get_toml_dict(toml_path) -> dict: 
+def get_toml_dict(toml_path: str) -> dict: 
     with open(toml_path, "rb") as f:
         return tomllib.load(f)
 
@@ -113,7 +113,7 @@ def main():
         language, message, section, message_args = populate_translation_vars(args)
 
     # Create paths for various TOML files and the current directory 
-    base_directory = Path(__file__).resolve().parents[1]
+    base_directory = Path(__file__).resolve().parents[2]
     language_list_path = os.path.join(base_directory, "lib", "languages.toml")
     default_language_path = os.path.join(base_directory, "lib", "english.toml")
     prefered_language_path = (

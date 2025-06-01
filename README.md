@@ -15,7 +15,7 @@ For example, your terminal's absolute path must match:
 
 ### Get Translation from File
 ```bash
-$ python src/translator.py [translation_command] [language_name] [variable_name] [category_name] [placeholder_arg1] ... 
+$ python src/Python/translator.py [translation_command] [language_name] [variable_name] [category_name] [placeholder_arg1] ... 
 ```
 
 Accepted translation commands (in the the first argument's place) include: `get-translation`, `translation`, and `translate`
@@ -36,7 +36,7 @@ welcome = "Welcome {name}!"
 
 The python command might look like:
 ```bash
-$ python src/translator.py Translate English setting ""
+$ python src/Python/translator.py Translate English setting ""
 ```
 
 This would output:
@@ -48,7 +48,7 @@ TRANSLATION: This is the English language file
 
 The python command might look like:
 ```bash
-$ python src/translator.py Translate English hello "" name=Blake
+$ python src/Python/translator.py Translate English hello "" name=Blake
 ```
 
 This would output:
@@ -60,7 +60,7 @@ TRANSLATION: Hello Blake!
 
 The python command might look like:
 ```bash
-$ python src/translator.py Translate English section_name start
+$ python src/Python/translator.py Translate English section_name start
 ```
 
 This would output:
@@ -72,7 +72,7 @@ TRANSLATION: This message is under the start section
 
 The python command might look like:
 ```bash
-$ python src/translator.py Translate English welcome start name=Blake
+$ python src/Python/translator.py Translate English welcome start name=Blake
 ```
 
 This would output:
@@ -89,7 +89,7 @@ TRANSLATION: Welcome Blake!
 ### List Supported Languages
 
 ```bash
-$ python src/translator.py [list_command] [language_name] 
+$ python src/Python/translator.py [list_command] [language_name] 
 ```
 
 Accepted translation commands (in the the first argument's place) include: `get-available`, `list`, and `list-available`
@@ -104,7 +104,7 @@ german = "Deutsch"
 
 The python command might look like:
 ```bash
-$ python src/translator.py list
+$ python src/Python/translator.py list
 ```
 
 This would output:
