@@ -7,9 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Translator {
-    private static String pythonScriptPath = "src/translator.py";
+    private static String pythonScriptPath = "src/Python/translator.py";
     private static String pythonInterpreter = "python";
     private static String prefferedLanguage = "English"; 
+
+    // Getters and setters for above fields 
 
     public static String getPythonScriptPath() {
         return Translator.pythonScriptPath; 
@@ -60,17 +62,18 @@ public class Translator {
 
     private static Boolean isEmptyParameter(String varToCheck, String methodName) {
         if (varToCheck.isEmpty()) {
-            System.out.printf("Your parameter passed to %s() was empty. Please recheck this input.\n", methodName);
+            System.out.println(
+                "Your parameter passed to " + methodName + " was empty. " +
+                "Please recheck this input."
+            );
             printCurrentFields();
-            return True;
+            return true;
         }
         return false;
     }
 
     /**
      * 
-     * 
-     * Example: "python translator.py get-translation English welcome gamestart name=Blake"
      * 
      * @param messageToGet
      * @param sectionName
@@ -101,8 +104,6 @@ public class Translator {
     /**
      * 
      * 
-     * Example: "python translator.py get-translation English welcome "" name=Blake"
-     * 
      * @param messageToGet
      * @param args
      * @return
@@ -128,11 +129,32 @@ public class Translator {
         return runCommand(command); 
     }
 
+    /**
+     * 
+     * 
+     * @return
+     */
     public static List<String> getAvailableLanguagesList() {
         ArrayList<String> command = new ArrayList<>(Arrays.asList(
             pythonInterpreter, 
             pythonScriptPath, 
             "list"
+        ));
+
+        String[] languages = runCommand(command)
+            .replace("[", "")
+            .replace("]", "")
+            .trim()
+            .split(",");
+
+        return Arrays.asList(languages);
+    }
+
+    public static List<String> getAnglicizedAvailableLanguagesList() {
+        ArrayList<String> command = new ArrayList<>(Arrays.asList(
+            pythonInterpreter, 
+            pythonScriptPath, 
+            "list-anglicized"
         ));
 
         String[] languages = runCommand(command)
