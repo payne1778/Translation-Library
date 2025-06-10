@@ -1,11 +1,11 @@
-# Translation Library in Python (CLI Version)
+# Translation Library Project: Python CLI
 
 The Python CLI implementation is still under development and may be under-documented in the code. If you encounter any errors or would like to suggest some feedback, consider opening an issue on GitHub.
 
 For the following feature examples, it is assumed that you are in the `Translation-Library` directory so that the `src/Python/translator.py` path works. However, this script can be ran virtually anywhere, as long as the absolute path of the script is given as a command line argument to your `python` interpreter.
 
 ```bash
-# Absolute path example
+### Absolute path example
 /home/user/Projects/Translation-Library/src/Python/translator.py
 ```
 
@@ -76,7 +76,7 @@ This would output:
 TRANSLATION: Welcome Blake!
 ```
 
-#### Things to note
+### Things to note
 
 - Placeholder arguments are optional, so an empty string (`""`) is not necessary. However, if the desired variable is not under a specific section, an empty string must be passed in.
 - The `[translation_command]`, `[language_name]`, and all placeholder argument values are not case sensitive (like `Translate` and `English` and `Blake` for `name=Blake`, respectively).
