@@ -1,5 +1,6 @@
 from pathlib import Path
 import tomllib
+import typing
 import sys
 import os
 
@@ -69,7 +70,7 @@ def print_translated_message(
         toml_path: str,
         variable: str,
         section: str = None,
-        variable_args: list[str] = None
+        variable_args: dict[str, object] = None
     ) -> None:
     """
     Prints the translated message with the given arguments.
@@ -129,7 +130,7 @@ def print_translated_message_handler(
         default_path: str,
         variable: str,
         section: str,
-        variable_args: list[str]
+        variable_args: dict[str, object]
     ) -> None:
     """
     Attempts to first print out the translated message using a preferred
@@ -233,7 +234,7 @@ def help_handler():
 
 
 def main():
-    # Initialize all available commands as separate lists for easier maintainability
+    # Initialize all commands as separate lists for easier maintainability
     translation_commands = [
         "get-translation", "translation", "translate"
     ]
