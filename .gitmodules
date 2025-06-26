@@ -1,6 +1,7 @@
 [submodule "Python"]
 	path = Python
 	url = https://github.com/payne1778/Translation-Library-Python
+	main = main
 [submodule "Java"]
 	path = Java
 	url = https://github.com/payne1778/Translation-Library-Java
