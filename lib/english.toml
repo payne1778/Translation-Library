@@ -1,6 +1,0 @@
-setting = "This is the English language file" 
-hello = "Hello {name}"
-
-[start]
-section_name = "This message is under the start section"
-welcome = "Welcome {name}!"
